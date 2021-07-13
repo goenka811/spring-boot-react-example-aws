@@ -30,7 +30,7 @@ k8s-deploy:
   image: google/cloud-sdk
   stage: deploy
   script:
-  - echo "$GOOGLE_KEY" > key.json
+  - echo "$GOOGLE_KEY"  > key.json
   - gcloud auth activate-service-account --key-file key.json
   - gcloud config set project spring-boot-react-example
   - gcloud config set compute/zone europe-north1 --project spring-boot-react-example
