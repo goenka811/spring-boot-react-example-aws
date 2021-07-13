@@ -37,4 +37,3 @@ build_image:
     - docker push ${REGISTRY_URL}:latest
   only:
     - develop
-    
