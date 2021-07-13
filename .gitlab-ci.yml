@@ -10,23 +10,22 @@ variables:
   SPRING_PROFILES_ACTIVE: gitlab-ci
 
 stages:
-  - init-terra
-  - build-terra
-  - deploy-terra
+  - init
   - build
-  - package
   - deploy
+  - package
+  - k8deploy
 
-init-terra:
+init:
   extends: .init
 
-build-terra:
+build:
   extends: .build
 
-deploy-terra:
+deploy:
   extends: .deploy
   dependencies:
-    - build-terra
+    - build
 
 maven-build:
   image: maven:3-jdk-8
@@ -45,7 +44,7 @@ docker-build:
 
 k8s-deploy:
   image: google/cloud-sdk
-  stage: deploy
+  stage: k8deploy
   script:
   - echo "$GOOGLE_KEY"  > key.json
   - gcloud auth activate-service-account --key-file key.json
