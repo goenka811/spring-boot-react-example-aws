@@ -1,37 +1,53 @@
-#include:
- # - template: Terraform.gitlab-ci.yml
-
-#variables:
-  # If not using GitLab's HTTP backend, remove this line and specify TF_HTTP_* variables
- # TF_STATE_NAME: default
-  #TF_CACHE_KEY: default
-  # If your terraform files are in a subdirectory, set TF_ROOT accordingly
-  # TF_ROOT: terraform/production
-  
-build-job:
+services:
+  - docker:dind
+stages:
+  - test
+  - build
+  - deploy
+variables:
+  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  REGISTRY_URL: 
+  DOCKER_BUILD_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
+image: maven:3.3.9-jdk-8
+cache:
+  paths:
+    - .m2/repository
+.verify: &verify
+  stage: test
+  script:
+    - 'mvn $MAVEN_CLI_OPTS verify'
+  artifacts:
+    paths:
+      - target/
+  except:
+    - master
+verify:jdk8:
+  <<: *verify
+build_image:
   stage: build
+  image: docker:git
   script:
-    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - mvn clean
-    - mvn compile
-    - mvn package
-    - docker build -t springreact:latest .
-  image: maven:3.3.9-jdk-8
-
-test-job1:
-  stage: test
-  script:
-    - echo "This job tests something"
-
-test-job2:
-  stage: test
-  script:
-    - echo "This job tests something, but takes more time than test-job1."
-    - echo "After the echo commands complete, it runs the sleep command for 20 seconds"
-    - echo "which simulates a test that runs 20 seconds longer than test-job1"
-    - sleep 20
-
-deploy-prod:
+    - docker login ${REGISTRY_URL} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - docker build -t ${REGISTRY_URL}:${DOCKER_BUILD_ID} .
+    - docker push ${REGISTRY_URL}:${DOCKER_BUILD_ID}
+    - docker tag ${REGISTRY_URL}:${DOCKER_BUILD_ID} ${REGISTRY_URL}:latest
+    - docker push ${REGISTRY_URL}:latest
+  only:
+    - develop
+deploy_to_stage:
   stage: deploy
+  when: manual
+  before_script:
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    - chmod +x ./kubectl
+    - mv ./kubectl /usr/local/bin/kubectl
+    - kubectl version --client
+    - mkdir -p $HOME/.kube && cp $KUBE_CONFIG_FILE "$HOME/.kube/config"
   script:
-    - echo "This job deploys something from the $CI_COMMIT_BRANCH branch."
+    - >
+      kubectl set image deployment hello-kubernetes-deployment
+      hello-kubernetes=${REGISTRY_URL}:${DOCKER_BUILD_ID}
+      --record
