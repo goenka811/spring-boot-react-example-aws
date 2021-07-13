@@ -16,11 +16,12 @@ Below are the Dev/configuration steps:
 5. Third task gets the image from docker repository and deploys the same in gcloud cluster made in step 1.
 6. Once the pods have the apps deployed we can expose the deployment to access the same via gcloud interface 
 and get the public IP address for the same.
-7. Monitoring and Auditing of the application can be done via glcoud interface only as well as autoscaling 
+7. Monitoring and Auditing of the application can be done via gcloud console only as well as autoscaling 
 steps can be added.. or for ex the below command:
 kubectl autoscale deployment spring-boot-react-example --cpu-percent=60 --min=1 --max=10 
 etc..
 
-Apologies dont have the time to change the app itself (DB).. 
+Apologies dont have the time to change the app itself to use RDB.. 
+
 Was working on automating the CI/CD pipeline with terraform as well.. however was having security/runner issue in running the same..
 Will keep checking and update if/once the same is working..
