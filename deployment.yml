@@ -1,0 +1,19 @@
+apiVersion: extensions/v1
+kind: Deployment
+metadata:
+  name: spring-boot-react-example
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: spring-boot-react-example
+    spec:
+      containers:
+      - name: spring-boot-react-example
+        image: registry.gitlab.com/goenka811/spring-boot-react-example
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: registry.gitlab.com
