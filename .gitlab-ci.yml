@@ -12,6 +12,10 @@ build-job:
   stage: build
   script:
     - echo "Hello, $GITLAB_USER_LOGIN!"
+    - mvn clean
+    - mvn compile
+    - mvn package
+    - docker build -t springreact:latest .
 
 test-job1:
   stage: test
