@@ -2,14 +2,31 @@ image: docker:latest
 services:
   - docker:dind
 
+include:
+  - template: Terraform/Base.latest.gitlab-ci.yml
+
 variables:
   DOCKER_DRIVER: overlay
   SPRING_PROFILES_ACTIVE: gitlab-ci
 
 stages:
+  - init-terra
+  - build-terra
+  - deploy-terra
   - build
   - package
   - deploy
+
+init-terra:
+  extends: .init
+
+build-terra:
+  extends: .build
+
+deploy-terra:
+  extends: .deploy
+  dependencies:
+    - build-terra
 
 maven-build:
   image: maven:3-jdk-8
