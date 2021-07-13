@@ -28,7 +28,7 @@ verify:jdk8:
   <<: *verify
 build_image:
   stage: build
-  image: docker:git
+  image: docker:latest
   script:
     - docker login ${REGISTRY_URL} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
     - docker build -t ${REGISTRY_URL}:${DOCKER_BUILD_ID} .
