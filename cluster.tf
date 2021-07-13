@@ -1,21 +1,3 @@
-#provider "google" {
-#  version = "~> 3.42.0"
-#}
-module "gke_auth" {
-  source = "terraform-google-modules/kubernetes-engine/google//modules/auth"
-  depends_on   = [module.gke]
-  project_id   = "spring-boot-react-example"
-  location     = module.gke.location
-  cluster_name = module.gke.name
-}
-#module "projects_iam_bindings" {
-#  source = "terraform-google-modules/iam/google//modules/project_iam"
-#  project_id = "spring-boot-react-example"
-#}
-#resource "local_file" "kubeconfig" {
-#  content  = module.gke_auth.kubeconfig_raw
-#  filename = "kubeconfig-dev"
-#}
 module "gcp-network" {
   source       = "terraform-google-modules/network/google"
   version      = "~> 2.5"
@@ -45,7 +27,7 @@ module "gcp-network" {
 module "gke" {
   source                 = "terraform-google-modules/kubernetes-engine/google//modules/private-cluster"
   project_id             = "spring-boot-react-example"
-  name                   = "spring-boot-react-example-dev"
+  name                   = "spring-boot-react-example"
   regional               = true
   region                 = "europe-north1"
   network                = module.gcp-network.network_name
