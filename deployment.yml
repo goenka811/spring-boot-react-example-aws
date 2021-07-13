@@ -4,6 +4,9 @@ metadata:
   name: spring-boot-react-example
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: spring-boot-react-example
   template:
     metadata:
       labels:
