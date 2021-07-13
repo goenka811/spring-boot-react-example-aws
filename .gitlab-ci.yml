@@ -2,30 +2,14 @@ image: docker:latest
 services:
   - docker:dind
 
-include:
-  - template: Terraform/Base.latest.gitlab-ci.yml
-
 variables:
   DOCKER_DRIVER: overlay
   SPRING_PROFILES_ACTIVE: gitlab-ci
 
 stages:
-  - init
   - build
-  - deploy
   - package
-  - k8deploy
-
-init:
-  extends: .init
-
-build:
-  extends: .build
-
-deploy:
-  extends: .deploy
-  dependencies:
-    - build
+  - deploy
 
 maven-build:
   image: maven:3-jdk-8
@@ -44,7 +28,7 @@ docker-build:
 
 k8s-deploy:
   image: google/cloud-sdk
-  stage: k8deploy
+  stage: deploy
   script:
   - echo "$GOOGLE_KEY"  > key.json
   - gcloud auth activate-service-account --key-file key.json
@@ -53,3 +37,4 @@ k8s-deploy:
   - gcloud config set container/use_client_certificate False
   - gcloud container clusters get-credentials spring-boot-react-example
   - kubectl apply -f deployment.yml
+  
