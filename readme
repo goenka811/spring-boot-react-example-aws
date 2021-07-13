@@ -1,7 +1,11 @@
 Design:
 
-Used terraform for buiding IAAC and Gitlab for pipeline automation / Gcloud for kubernetes deployment..
-Just 2 variables in secret registry (password for docker repos and key for gcloud)
+1. Its just the forked repository from the orginal assignment one.. in my workspace goenka811..
+Once we have the config files from this.. the same can be deployed in your own cloud environment..
+
+2. Used terraform for buiding IAAC and Gitlab for pipeline automation / Gcloud for kubernetes deployment..
+
+3. Just 2 variables in secret registry (password for docker repos and key for gcloud)
 
 Below are the Dev/configuration steps:
 
@@ -16,3 +20,5 @@ and get the public IP address for the same.
 steps can be added.. or for ex the below command:
 kubectl autoscale deployment spring-boot-react-example --cpu-percent=60 --min=1 --max=10 
 etc..
+
+Apologies dont have the time to change the app itself (DB).. 
