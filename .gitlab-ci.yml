@@ -1,39 +1,28 @@
-image: docker:19.03.0
+image: docker:latest
 services:
   - docker:dind
-stages:
-  - test
-  - build
-  - deploy
+
 variables:
-  MAVEN_OPTS: "-Dhttps.protocols=TLSv1.2 -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
-  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
-  DOCKER_HOST: "tcp://docker:2375"
-  DOCKER_DRIVER: overlay2
-  REGISTRY_URL: registry.gitlab.com/goenka811/spring-boot-react-example
-  DOCKER_BUILD_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
-cache:
-  paths:
-    - .m2/repository
-.verify: &verify
-  stage: test
-  script:
-    - 'mvn $MAVEN_CLI_OPTS verify'
+  DOCKER_DRIVER: overlay
+  SPRING_PROFILES_ACTIVE: gitlab-ci
+
+stages:
+  - build
+  - package
+  - deploy
+
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
+  script: "mvn package -B"
   artifacts:
     paths:
-      - target/
-  except:
-    - master
-verify:jdk8:
-  <<: *verify
-build_image:
-  stage: build
-  image: docker:latest
+      - target/*.jar
+
+docker-build:
+  stage: package
   script:
-    - docker login ${REGISTRY_URL} -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
-    - docker build -t ${REGISTRY_URL}:${DOCKER_BUILD_ID} .
-    - docker push ${REGISTRY_URL}:${DOCKER_BUILD_ID}
-    - docker tag ${REGISTRY_URL}:${DOCKER_BUILD_ID} ${REGISTRY_URL}:latest
-    - docker push ${REGISTRY_URL}:latest
-  only:
-    - develop
+  - docker build -t registry.gitlab.com/goenka811/spring-boot-react-example .
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker push registry.gitlab.com/goenka811/spring-boot-react-example
+
