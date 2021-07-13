@@ -16,6 +16,7 @@ build-job:
     - mvn compile
     - mvn package
     - docker build -t springreact:latest .
+  image: maven:3.8.1-jdk-16
 
 test-job1:
   stage: test
