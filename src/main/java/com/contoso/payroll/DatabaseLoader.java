@@ -27,7 +27,7 @@ public class DatabaseLoader implements CommandLineRunner {
 		Manager greg = this.managers.save(new Manager("greg", "turnquist",
 							"ROLE_MANAGER"));
 							
-		Manager oliver = this.managers.save(new Manager("oliver", "gierke",
+		Manager oliver = this.managers.save(new Manager("oliver", "goenka",
 							"ROLE_MANAGER"));
 
 		SecurityContextHolder.getContext().setAuthentication(
