@@ -15,7 +15,7 @@ spec:
       containers:
       - name: spring-boot-react-example
         image: registry.gitlab.com/goenka811/spring-boot-react-example
-        imagePullPolicy: Always
+        imagePullPolicy: Never
         ports:
         - containerPort: 8080
       imagePullSecrets:
