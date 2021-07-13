@@ -1,6 +1,7 @@
 Design:
 
 Used terraform for buiding IAAC and Gitlab for pipeline automation / Gcloud for kubernetes deployment..
+Just 2 variables in secret registry (password for docker repos and key for gcloud)
 
 Below are the Dev/configuration steps:
 
