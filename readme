@@ -1,9 +1,16 @@
+Design:
+
+Used terraform for buiding IAAC and Gitlab for pipeline automation / Gcloud for kubernetes deployment..
+
+Below are the Dev/configuration steps:
+
 1. Terraform infra creation scripts still need to be run on gcloud CLI as terraform apply..
 2. Once the cluster / nodes are created pipeline can be executed via gitlab..
 3. First task completes the maven build of the app and produces the jar..
 4. Second task converts the Jar in image / tags and pushes that to docker repository..
 5. Third task gets the image from docker repository and deploys the same in gcloud cluster made in step 1.
-6. Once the pods have the apps deployed we can expose the deployment to access the same via gcloud interface.
+6. Once the pods have the apps deployed we can expose the deployment to access the same via gcloud interface 
+and get the public IP address for the same.
 7. Monitoring and Auditing of the application can be done via glcoud interface only as well as autoscaling 
 steps can be added.. or for ex the below command:
 kubectl autoscale deployment spring-boot-react-example --cpu-percent=60 --min=1 --max=10 
