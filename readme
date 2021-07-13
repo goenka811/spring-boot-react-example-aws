@@ -1,7 +1,7 @@
 Design:
 
-1. Its just the forked repository from the orginal assignment one.. in my workspace goenka811..
-Once we have the config files from this.. the same can be deployed in your own cloud environment..
+1. Its just the forked repository from the orginal assignment one.. in my gitlab workspace goenka811..
+Once we have the below config files from this workspace.. the same can be deployed in your own cloud environment..
 
 2. Used terraform for buiding IAAC and Gitlab for pipeline automation / Gcloud for kubernetes deployment..
 
@@ -22,3 +22,5 @@ kubectl autoscale deployment spring-boot-react-example --cpu-percent=60 --min=1 
 etc..
 
 Apologies dont have the time to change the app itself (DB).. 
+Was working on automating the CI/CD pipeline with terraform as well.. however was having security/runner issue in running the same..
+Will keep checking and update if/once the same is working..
