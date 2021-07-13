@@ -21,6 +21,10 @@ steps can be added.. or for ex the below command:
 kubectl autoscale deployment spring-boot-react-example --cpu-percent=60 --min=1 --max=10 
 etc..
 
+App can be accessed using load balanced public IP : http://34.88.65.109:8080/login
+Once anything is changed in Repo then the deployment will trigger automatically and we should be able to see the changes in sometime on above URL..
+
+To detroy the app.. we can just remove the deployments and then terraform destroy to delete the cloud infra..
 Apologies dont have the time to change the app itself to use RDB.. 
 
 Was working on automating the CI/CD pipeline with terraform as well.. however was having security/runner issue in running the same..
