@@ -102,7 +102,7 @@ class App extends React.Component {
 				/* Let the websocket handler update the state */
 			}, response => {
 				if (response.status.code === 403) {
-					alert('ACCESS DENIED: You are not authorized to update ' +
+					alert('ACCESS DENIED: You are not authorised to update ' +
 						employee.entity._links.self.href);
 				}
 				if (response.status.code === 412) {
