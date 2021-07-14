@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: spring-boot-react-example
-        image: goenka811/spring-boot-react-example-$CI_BUILD_ID
+        image: goenka811/spring-boot-react-example-$CI_PIPELINE_ID
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
