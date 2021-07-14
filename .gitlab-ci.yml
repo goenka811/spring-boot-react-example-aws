@@ -22,9 +22,9 @@ maven-build:
 docker-build:
   stage: package
   script:
-  - docker build -t goenka811/spring-boot-react-example-$CI_BUILD_ID .
+  - docker build -t goenka811/spring-boot-react-example-$CI_PIPELINE_ID .
   - docker login -u goenka811 -p $REGISTRY_PASSWD
-  - docker push goenka811/spring-boot-react-example-$CI_BUILD_ID
+  - docker push goenka811/spring-boot-react-example-$CI_PIPELINE_ID
 
 k8s-deploy:
   image: google/cloud-sdk
@@ -37,5 +37,5 @@ k8s-deploy:
   - gcloud config set container/use_client_certificate False
   - gcloud container clusters get-credentials spring-boot-react-example
   - kubectl apply -f deployment.yml
-  - kubectl set image deployment/spring-boot-react-example spring-boot-react-example=goenka811/spring-boot-react-example-$CI_BUILD_ID --record
+  - kubectl set image deployment/spring-boot-react-example spring-boot-react-example=goenka811/spring-boot-react-example-$CI_PIPELINE_ID --record
   
