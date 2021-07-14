@@ -37,4 +37,5 @@ k8s-deploy:
   - gcloud config set container/use_client_certificate False
   - gcloud container clusters get-credentials spring-boot-react-example
   - kubectl apply -f deployment.yml
+  - kubectl set image deployment/spring-boot-react-example spring-boot-react-example=goenka811/spring-boot-react-example --record
   
