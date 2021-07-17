@@ -27,15 +27,9 @@ docker-build:
   - docker push goenka811/spring-boot-react-example-$CI_PIPELINE_ID
 
 k8s-deploy:
-  image: google/cloud-sdk
   stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest  # see the note below
   script:
-  - echo "$GOOGLE_KEY"  > key.json
-  - gcloud auth activate-service-account --key-file key.json
-  - gcloud config set project spring-boot-react-example
-  - gcloud config set compute/zone europe-north1 --project spring-boot-react-example
-  - gcloud config set container/use_client_certificate False
-  - gcloud container clusters get-credentials spring-boot-react-example
   - kubectl apply -f deployment.yml
   - kubectl set image deployment/spring-boot-react-example spring-boot-react-example=goenka811/spring-boot-react-example-$CI_PIPELINE_ID --record
   
